@@ -86,7 +86,7 @@ def app_init():
 
 
 def main():
-    p1, p2 = app_init()
+    p1, p2, p3 = app_init()
     st.title("Haystack Demo")
     input = st.text_input("Query ...")
 
@@ -101,7 +101,10 @@ def main():
 
     with col_2:
         st.write(query_type.upper())
-        answers_2 = p2.run(input)
+        if query_type == "Retrieval Augmented":
+            answers_2 = p2.run(input)
+        else:
+            answers_2 = p3.run(input)
         st.text(answers_2['results'][0])
 
 
