@@ -17,10 +17,6 @@ logging.basicConfig(
     force=True,
 )
 
-p_1 = None
-p_2 = None
-
-
 def get_plain_pipeline():
     prompt_open_ai = PromptModel(model_name_or_path="text-davinci-003", api_key=api_key)
 
@@ -61,11 +57,31 @@ def get_ret_aug_pipeline():
     return pipe
 
 
+def get_web_ret_pipeline():
+    search_key = st.secrets["WEBRET_API_KEY"]
+    web_retriever = WebRetriever(api_key=search_key, search_engine_provider="SerperDev")
+    shaper = Shaper(func="join_documents", inputs={"documents": "documents"}, outputs=["documents"])
+    default_template = PromptTemplate(
+        name="question-answering",
+        prompt_text="Given the context please answer the question. Context: $documents; Question: "
+                    "$query; Answer:",
+    )
+    # Let's initiate the PromptNode
+    node = PromptNode("text-davinci-003", default_prompt_template=default_template, api_key=api_key, max_length=500)
+    # Let's create a pipeline with Shaper and PromptNode
+    pipe = Pipeline()
+    pipe.add_node(component=web_retriever, name='retriever', inputs=['Query'])
+    pipe.add_node(component=shaper, name="shaper", inputs=["retriever"])
+    pipe.add_node(component=node, name="prompt_node", inputs=["shaper"])
+    return pipe
+
+
 def app_init():
 
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
     p1 = get_plain_pipeline()
     p2 = get_ret_aug_pipeline()
+    # p3 = get_web_ret_pipeline()
     return p1, p2
 
 
