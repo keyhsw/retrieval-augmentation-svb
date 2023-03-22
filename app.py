@@ -88,7 +88,7 @@ def app_init():
 def main():
     p1, p2, p3 = app_init()
     st.title("Haystack Demo")
-    input = st.text_input("Query ...")
+    input = st.text_input("Query ...", "Did SVB collapse?")
 
     query_type = st.radio("Type",
                           ("Retrieval Augmented", "Retrieval Augmented with Web Search"))
