@@ -1,0 +1,36 @@
+components:
+  - name: DocumentStore
+    type: FAISSDocumentStore
+    params:
+      faiss_index_path: "my_faiss_index.faiss"
+      faiss_config_path: "my_faiss_config.json"
+
+  - name: Retriever
+    params:
+      document_store: DocumentStore
+      embedding_model: "sentence-transformers/multi-qa-mpnet-base-dot-v1"
+    type: EmbeddingRetriever
+
+  - name: PromptNode
+    type: OpenAIAnswerGenerator
+    params:
+      model: text-davinci-003
+
+  - name: TextFileConverter
+    type: TextConverter
+pipelines:
+  - name: query
+    nodes:
+      - inputs: [Query]
+        name: Retriever
+      - inputs: [Retriever]
+        name: PromptNode
+  - name: indexing
+    nodes:
+      - name: TextFileConverter
+        inputs: [File]
+      - name: Retriever
+        inputs: [TextFileConverter]
+      - name: DocumentStore
+        inputs: [Retriever]
+version: ignore
