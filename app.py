@@ -6,7 +6,7 @@ import sys
 import streamlit as st
 from haystack import Pipeline
 from haystack.document_stores import FAISSDocumentStore
-from haystack.nodes import Shaper, PromptNode, PromptTemplate, PromptModel
+from haystack.nodes import Shaper, PromptNode, PromptTemplate, PromptModel, EmbeddingRetriever
 from haystack.nodes.retriever.web import WebRetriever
 from haystack.schema import Document
 
