@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 
 def get_plain_pipeline():
-    prompt_open_ai = PromptModel(model_name_or_path="text-davinci-003", api_key=api_key)
+    prompt_open_ai = PromptModel(model_name_or_path="text-davinci-003", api_key=st.secrets["OPENAI_API_KEY"])
 
     # Now let make one PromptNode use the default model and the other one the OpenAI model:
     plain_llm_template = PromptTemplate(name="plain_llm", prompt_text="Answer the following question: $query")
@@ -47,7 +47,8 @@ def get_ret_aug_pipeline():
                     "$query; Answer:",
     )
     # Let's initiate the PromptNode
-    node = PromptNode("text-davinci-003", default_prompt_template=default_template, api_key=api_key, max_length=500)
+    node = PromptNode("text-davinci-003", default_prompt_template=default_template,
+                      api_key=st.secrets["OPENAI_API_KEY"], max_length=500)
 
     # Let's create a pipeline with Shaper and PromptNode
     pipe = Pipeline()
@@ -67,7 +68,8 @@ def get_web_ret_pipeline():
                     "$query; Answer:",
     )
     # Let's initiate the PromptNode
-    node = PromptNode("text-davinci-003", default_prompt_template=default_template, api_key=api_key, max_length=500)
+    node = PromptNode("text-davinci-003", default_prompt_template=default_template,
+                      api_key=st.secrets["OPENAI_API_KEY"], max_length=500)
     # Let's create a pipeline with Shaper and PromptNode
     pipe = Pipeline()
     pipe.add_node(component=web_retriever, name='retriever', inputs=['Query'])
@@ -75,14 +77,12 @@ def get_web_ret_pipeline():
     pipe.add_node(component=node, name="prompt_node", inputs=["shaper"])
     return pipe
 
-
 def app_init():
-
     os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
     p1 = get_plain_pipeline()
     p2 = get_ret_aug_pipeline()
-    # p3 = get_web_ret_pipeline()
-    return p1, p2
+    p3 = get_web_ret_pipeline()
+    return p1, p2, p3
 
 
 def main():
