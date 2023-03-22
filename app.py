@@ -73,10 +73,7 @@ def main():
     input = st.text_input("Query ...")
 
     query_type = st.radio("Type",
-                          ("Retrieval Augmented", "Retrieval Augmented with Sources",
-                           "Retrieval Augmented with Web Search"))
-
-
+                          ("Retrieval Augmented", "Retrieval Augmented with Web Search"))
     col_1, col_2 = st.columns(2)
 
     with col_1:
