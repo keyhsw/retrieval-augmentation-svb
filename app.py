@@ -24,7 +24,6 @@ p_2 = None
 def get_plain_pipeline():
     prompt_open_ai = PromptModel(model_name_or_path="text-davinci-003", api_key=api_key)
 
-
     # Now let make one PromptNode use the default model and the other one the OpenAI model:
     plain_llm_template = PromptTemplate(name="plain_llm", prompt_text="Answer the following question: $query")
     node_openai = PromptNode(prompt_open_ai, default_prompt_template=plain_llm_template, max_length=300)
