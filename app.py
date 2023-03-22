@@ -96,15 +96,13 @@ def main():
 
     with col_1:
         st.text("PLAIN")
-        answers = p1.run(input)["answers"]
-        for ans in answers:
-            st.text(ans.answer)
+        answers = p1.run(input)
+        st.text(answers['results'][0])
 
     with col_2:
         st.write(query_type.upper())
-        answers = p2.run(input)["answers"]
-        for ans in answers:
-            st.text(ans.answer)
+        answers_2 = p2.run(input)
+        st.text(answers_2['results'][0])
 
 
 if __name__ == "__main__":
