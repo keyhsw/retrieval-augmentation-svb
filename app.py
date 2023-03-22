@@ -5,7 +5,9 @@ import sys
 
 import streamlit as st
 from haystack import Pipeline
-from haystack.nodes import Shaper, PromptNode, PromptTemplate
+from haystack.document_stores import FAISSDocumentStore
+from haystack.nodes import Shaper, PromptNode, PromptTemplate, PromptModel
+from haystack.nodes.retriever.web import WebRetriever
 from haystack.schema import Document
 
 logging.basicConfig(
@@ -30,6 +32,7 @@ def get_plain_pipeline():
     pipeline = Pipeline()
     pipeline.add_node(component=node_openai, name="prompt_node", inputs=["Query"])
     return pipeline
+
 
 def get_ret_aug_pipeline():
     ds = FAISSDocumentStore(faiss_index_path="my_faiss_index.faiss",
