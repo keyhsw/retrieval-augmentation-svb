@@ -10,4 +10,5 @@ logging.basicConfig(
 )
 
 
-st.set_page_config(page_title="Haystack Demo")
+st.title("Haystack Demo")
+st.text_input("Query ...")
