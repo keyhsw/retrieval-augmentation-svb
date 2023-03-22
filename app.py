@@ -26,7 +26,7 @@ def app_init():
     # ds.update_embeddings(indexing_pipeline.get_node("Retriever"))
     # ds.save(config_path="my_faiss_config.json", index_path="my_faiss_index.faiss")
 
-    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+    os.environ["PROMPTNODE_PARAMS_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
     global p_1
     p_1 = Pipeline.load_from_yaml("pipeline.yaml", pipeline_name="query_1")

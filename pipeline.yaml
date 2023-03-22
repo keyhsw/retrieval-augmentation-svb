@@ -39,6 +39,13 @@ pipelines:
       - inputs: [ Retriever ]
         name: PromptNode
 
+  - name: query_3
+    nodes:
+      - inputs: [ Query ]
+        name: Retriever
+      - inputs: [ Retriever ]
+        name: PromptNode
+
   - name: indexing
     nodes:
       - name: TextFileConverter
