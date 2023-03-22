@@ -15,6 +15,7 @@ logging.basicConfig(
     force=True,
 )
 
+p = None
 
 def app_init():
     docs = [Document(id='1', content='His name is John.'),
