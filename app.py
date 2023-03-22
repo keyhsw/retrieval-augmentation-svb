@@ -1,6 +1,7 @@
 import sys
 import logging
 import streamlit as st
+import haystack
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -12,3 +13,4 @@ logging.basicConfig(
 
 st.title("Haystack Demo")
 st.text_input("Query ...")
+st.text(haystack.__version__)
