@@ -32,7 +32,8 @@ def main():
     app_init()
     st.title("Haystack Demo")
     input = st.text_input("Query ...")
-    st.text(p.run(str(input or "test")))
+    result = p.run(input)
+    st.text()
 
 
 if __name__ == "__main__":
