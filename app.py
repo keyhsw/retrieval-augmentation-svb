@@ -92,20 +92,24 @@ def main():
 
     query_type = st.radio("Type",
                           ("Retrieval Augmented", "Retrieval Augmented with Web Search"))
-    col_1, col_2 = st.columns(2)
+    # col_1, col_2 = st.columns(2)
 
-    with col_1:
-        st.text("PLAIN")
-        answers = p1.run(input)
-        st.text(answers['results'][0])
+    if st.button("Random Question"):
+        new_text = "Streamlit is great!"
+        input.value = new_text
 
-    with col_2:
-        st.write(query_type.upper())
-        if query_type == "Retrieval Augmented":
-            answers_2 = p2.run(input)
-        else:
-            answers_2 = p3.run(input)
-        st.text(answers_2['results'][0])
+    # with col_1:
+    # st.text("PLAIN")
+    answers = p1.run(input)
+    st.text_area("PLAIN GPT", answers['results'][0])
+
+    # with col_2:
+    # st.write(query_type.upper())
+    if query_type == "Retrieval Augmented":
+        answers_2 = p2.run(input)
+    else:
+        answers_2 = p3.run(input)
+    st.text_area(query_type.upper(),answers_2['results'][0])
 
 
 if __name__ == "__main__":
