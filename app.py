@@ -1,116 +1,59 @@
-import glob
-import os
-import logging
-import sys
-
 import streamlit as st
-from haystack import Pipeline
-from haystack.document_stores import FAISSDocumentStore
-from haystack.nodes import Shaper, PromptNode, PromptTemplate, PromptModel, EmbeddingRetriever
-from haystack.nodes.retriever.web import WebRetriever
-from haystack.schema import Document
+from backend_utils import app_init, set_q1, set_q2, set_q3, set_q4, set_q5
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(levelname)s %(asctime)s %(name)s:%(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)],
-    force=True,
-)
+st.markdown("<center> <h1> Haystack Demo </h1> </center>", unsafe_allow_html=True)
 
-def get_plain_pipeline():
-    prompt_open_ai = PromptModel(model_name_or_path="text-davinci-003", api_key=st.secrets["OPENAI_API_KEY"])
+if st.session_state.get('pipelines_loaded', False):
+    with st.spinner('Loading pipelines...'):
+        p1, p2, p3 = app_init()
+        st.success('Pipelines are loaded', icon="✅")
+        st.session_state['pipelines_loaded'] = True
 
-    # Now let make one PromptNode use the default model and the other one the OpenAI model:
-    plain_llm_template = PromptTemplate(name="plain_llm", prompt_text="Answer the following question: $query")
-    node_openai = PromptNode(prompt_open_ai, default_prompt_template=plain_llm_template, max_length=300)
+placeholder = st.empty()
+with placeholder:
+    search_bar, button = st.columns([3, 1])
+    with search_bar:
+        username = st.text_area(f"", max_chars=200, key='query')
 
-    pipeline = Pipeline()
-    pipeline.add_node(component=node_openai, name="prompt_node", inputs=["Query"])
-    return pipeline
+    with button:
+        st.write("")
+        st.write("")
+        run_pressed = st.button("Run")
 
+st.radio("Type", ("Retrieval Augmented", "Retrieval Augmented with Web Search"), key="query_type")
 
-def get_ret_aug_pipeline():
-    ds = FAISSDocumentStore(faiss_index_path="my_faiss_index.faiss",
-                            faiss_config_path="my_faiss_index.json")
+# st.sidebar.selectbox(
+#      "Example Questions:",
+#      QUERIES,
+#      key='q_drop_down', on_change=set_question)
 
-    retriever = EmbeddingRetriever(
-        document_store=ds,
-        embedding_model="sentence-transformers/multi-qa-mpnet-base-dot-v1",
-        model_format="sentence_transformers",
-        top_k=2
-    )
-    shaper = Shaper(func="join_documents", inputs={"documents": "documents"}, outputs=["documents"])
+c1, c2, c3, c4, c5 = st.columns(5)
+with c1:
+    st.button('Example Q1', on_click=set_q1)
+with c2:
+    st.button('Example Q2', on_click=set_q2)
+with c3:
+    st.button('Example Q3', on_click=set_q3)
+with c4:
+    st.button('Example Q4', on_click=set_q4)
+with c5:
+    st.button('Example Q5', on_click=set_q5)
 
-    default_template= PromptTemplate(
-        name="question-answering",
-        prompt_text="Given the context please answer the question. Context: $documents; Question: "
-                    "$query; Answer:",
-    )
-    # Let's initiate the PromptNode
-    node = PromptNode("text-davinci-003", default_prompt_template=default_template,
-                      api_key=st.secrets["OPENAI_API_KEY"], max_length=500)
+st.markdown("<h4> Answer with PLAIN GPT </h4>", unsafe_allow_html=True)
+placeholder_plain_gpt = st.empty()
+st.text("")
+st.text("")
+st.markdown(f"<h4> Answer with {st.session_state['query_type'].upper()} </h4>", unsafe_allow_html=True)
+placeholder_retrieval_augmented = st.empty()
 
-    # Let's create a pipeline with Shaper and PromptNode
-    pipe = Pipeline()
-    pipe.add_node(component=retriever, name='retriever', inputs=['Query'])
-    pipe.add_node(component=shaper, name="shaper", inputs=["retriever"])
-    pipe.add_node(component=node, name="prompt_node", inputs=["shaper"])
-    return pipe
-
-
-def get_web_ret_pipeline():
-    search_key = st.secrets["WEBRET_API_KEY"]
-    web_retriever = WebRetriever(api_key=search_key, search_engine_provider="SerperDev")
-    shaper = Shaper(func="join_documents", inputs={"documents": "documents"}, outputs=["documents"])
-    default_template = PromptTemplate(
-        name="question-answering",
-        prompt_text="Given the context please answer the question. Context: $documents; Question: "
-                    "$query; Answer:",
-    )
-    # Let's initiate the PromptNode
-    node = PromptNode("text-davinci-003", default_prompt_template=default_template,
-                      api_key=st.secrets["OPENAI_API_KEY"], max_length=500)
-    # Let's create a pipeline with Shaper and PromptNode
-    pipe = Pipeline()
-    pipe.add_node(component=web_retriever, name='retriever', inputs=['Query'])
-    pipe.add_node(component=shaper, name="shaper", inputs=["retriever"])
-    pipe.add_node(component=node, name="prompt_node", inputs=["shaper"])
-    return pipe
-
-def app_init():
-    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-    p1 = get_plain_pipeline()
-    p2 = get_ret_aug_pipeline()
-    p3 = get_web_ret_pipeline()
-    return p1, p2, p3
-
-
-def main():
+if st.session_state.get('query') and run_pressed:
+    input = st.session_state['query']
     p1, p2, p3 = app_init()
-    st.title("Haystack Demo")
-    input = st.text_input("Query ...", "Did SVB collapse?")
-
-    query_type = st.radio("Type",
-                          ("Retrieval Augmented", "Retrieval Augmented with Web Search"))
-    # col_1, col_2 = st.columns(2)
-
-    if st.button("Random Question"):
-        new_text = "Streamlit is great!"
-        input.value = new_text
-
-    # with col_1:
-    # st.text("PLAIN")
     answers = p1.run(input)
-    st.text_area("PLAIN GPT", answers['results'][0])
+    placeholder_plain_gpt.markdown(answers['results'][0])
 
-    # with col_2:
-    # st.write(query_type.upper())
-    if query_type == "Retrieval Augmented":
+    if st.session_state.get("query_type", "Retrieval Augmented") == "Retrieval Augmented":
         answers_2 = p2.run(input)
     else:
         answers_2 = p3.run(input)
-    st.text_area(query_type.upper(),answers_2['results'][0])
-
-
-if __name__ == "__main__":
-    main()
+    placeholder_retrieval_augmented.markdown(answers_2['results'][0])
