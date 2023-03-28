@@ -1,6 +1,7 @@
 import streamlit as st
 from backend_utils import (get_plain_pipeline, get_retrieval_augmented_pipeline,
-                           get_web_retrieval_augmented_pipeline, set_q1, set_q2, set_q3, set_q4, set_q5, QUERIES)
+                           get_web_retrieval_augmented_pipeline, set_q1, set_q2, set_q3, set_q4, set_q5, QUERIES,
+                           PLAIN_GPT_ANS, GPT_WEB_RET_AUG_ANS, GPT_LOCAL_RET_AUG_ANS)
 
 st.set_page_config(
     page_title="Retrieval Augmentation with Haystack",
@@ -51,39 +52,39 @@ st.radio("Answer Type:", ("Retrieval Augmented (Static news dataset)", "Retrieva
 #      QUERIES,
 #      key='q_drop_down', on_change=set_question)
 
-st.markdown("<h5> Answer with GPT's Internal Knowledge </h5>", unsafe_allow_html=True)
+st.markdown(f"<h5> {PLAIN_GPT_ANS} </h5>", unsafe_allow_html=True)
 placeholder_plain_gpt = st.empty()
 st.text(" ")
 st.text(" ")
 if st.session_state.get("query_type", "Retrieval Augmented (Static news dataset)") == "Retrieval Augmented (Static news dataset)":
-    st.markdown("<h5> Answer with Retrieval Augmented GPT (Static news dataset) </h5>", unsafe_allow_html=True)
+    st.markdown(f"<h5> {GPT_LOCAL_RET_AUG_ANS} </h5>", unsafe_allow_html=True)
 else:
-    st.markdown("<h5> Answer with Retrieval Augmented GPT (Web Search) </h5>", unsafe_allow_html=True)
+    st.markdown(f"<h5>{GPT_WEB_RET_AUG_ANS} </h5>", unsafe_allow_html=True)
 placeholder_retrieval_augmented = st.empty()
 
 if st.session_state.get('query') and run_pressed:
     ip = st.session_state['query']
     with st.spinner('Loading pipelines... \n This may take a few mins and might also fail if OpenAI API server is down.'):
         p1 = get_plain_pipeline()
-    with st.spinner('Fetching answers from GPT\'s internal knowledge... '
+    with st.spinner('Fetching answers from plain GPT... '
                     '\n This may take a few mins and might also fail if OpenAI API server is down.'):
         answers = p1.run(ip)
     placeholder_plain_gpt.markdown(answers['results'][0])
 
     if st.session_state.get("query_type", "Retrieval Augmented") == "Retrieval Augmented":
         with st.spinner(
-                'Loading Retrieval Augmented pipeline... \
-                n This may take a few mins and might also fail if OpenAI API server is down.'):
+                'Loading Retrieval Augmented pipeline that can fetch relevant documents from local data store... '
+                '\n This may take a few mins and might also fail if OpenAI API server is down.'):
             p2 = get_retrieval_augmented_pipeline()
-        with st.spinner('Fetching relevant documents from documented stores and calculating answers... '
+        with st.spinner('Getting relevant documents from documented stores and calculating answers... '
                         '\n This may take a few mins and might also fail if OpenAI API server is down.'):
             answers_2 = p2.run(ip)
     else:
         with st.spinner(
-                'Loading Retrieval Augmented pipeline... \
+                'Loading Retrieval Augmented pipeline that can fetch relevant documents from the web... \
                 n This may take a few mins and might also fail if OpenAI API server is down.'):
             p3 = get_web_retrieval_augmented_pipeline()
-        with st.spinner('Fetching relevant documents from the Web and calculating answers... '
+        with st.spinner('Getting relevant documents from the Web and calculating answers... '
                         '\n This may take a few mins and might also fail if OpenAI API server is down.'):
             answers_2 = p3.run(ip)
     placeholder_retrieval_augmented.markdown(answers_2['results'][0])

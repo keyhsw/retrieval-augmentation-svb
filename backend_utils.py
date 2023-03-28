@@ -12,6 +12,9 @@ QUERIES = [
     "Who is responsible for SVC collapse?",
     "When did SVB collapse?"
 ]
+PLAIN_GPT_ANS = "Answer with plain GPT"
+GPT_LOCAL_RET_AUG_ANS = "Answer with Retrieval Augmented GPT (Static news dataset)"
+GPT_WEB_RET_AUG_ANS = "Answer with Retrieval Augmented GPT (Web Search)"
 
 
 @st.cache_resource(show_spinner=False)
@@ -74,18 +77,6 @@ def get_web_retrieval_augmented_pipeline():
     pipeline.add_node(component=shaper, name="shaper", inputs=["retriever"])
     pipeline.add_node(component=node, name="prompt_node", inputs=["shaper"])
     return pipeline
-
-
-# @st.cache_resource(show_spinner=False)
-# def app_init():
-#     print("Loading Pipelines...")
-#     p1 = get_plain_pipeline()
-#     print("Loaded Plain Pipeline")
-#     p2 = get_retrieval_augmented_pipeline()
-#     print("Loaded Retrieval Augmented Pipeline")
-#     p3 = get_web_retrieval_augmented_pipeline()
-#     print("Loaded Web Retrieval Augmented Pipeline")
-#     return p1, p2, p3
 
 
 if 'query' not in st.session_state:
