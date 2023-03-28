@@ -1,5 +1,3 @@
-import os
-
 import streamlit as st
 from haystack import Pipeline
 from haystack.document_stores import FAISSDocumentStore
@@ -15,14 +13,8 @@ QUERIES = [
     "When did SVB collapse?"
 ]
 
-def ChangeWidgetFontSize(wgt_txt, wch_font_size = '12px'):
-    htmlstr = """<script>var elements = window.parent.document.querySelectorAll('*'), i;
-                    for (i = 0; i < elements.length; ++i) { if (elements[i].innerText == |wgt_txt|) 
-                        { elements[i].style.fontSize='""" + wch_font_size + """';} } </script>  """
 
-    htmlstr = htmlstr.replace('|wgt_txt|', "'" + wgt_txt + "'")
-
-
+@st.cache_resource(show_spinner=False)
 def get_plain_pipeline():
     prompt_open_ai = PromptModel(model_name_or_path="text-davinci-003", api_key=st.secrets["OPENAI_API_KEY"])
     # Now let make one PromptNode use the default model and the other one the OpenAI model:
@@ -33,6 +25,7 @@ def get_plain_pipeline():
     return pipeline
 
 
+@st.cache_resource(show_spinner=False)
 def get_retrieval_augmented_pipeline():
     ds = FAISSDocumentStore(faiss_index_path="data/my_faiss_index.faiss",
                             faiss_config_path="data/my_faiss_index.json")
@@ -62,6 +55,7 @@ def get_retrieval_augmented_pipeline():
     return pipeline
 
 
+@st.cache_resource(show_spinner=False)
 def get_web_retrieval_augmented_pipeline():
     search_key = st.secrets["WEBRET_API_KEY"]
     web_retriever = WebRetriever(api_key=search_key, search_engine_provider="SerperDev")
@@ -82,13 +76,16 @@ def get_web_retrieval_augmented_pipeline():
     return pipeline
 
 
-@st.cache_resource(show_spinner=False)
-def app_init():
-    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-    p1 = get_plain_pipeline()
-    p2 = get_retrieval_augmented_pipeline()
-    p3 = get_web_retrieval_augmented_pipeline()
-    return p1, p2, p3
+# @st.cache_resource(show_spinner=False)
+# def app_init():
+#     print("Loading Pipelines...")
+#     p1 = get_plain_pipeline()
+#     print("Loaded Plain Pipeline")
+#     p2 = get_retrieval_augmented_pipeline()
+#     print("Loaded Retrieval Augmented Pipeline")
+#     p3 = get_web_retrieval_augmented_pipeline()
+#     print("Loaded Web Retrieval Augmented Pipeline")
+#     return p1, p2, p3
 
 
 if 'query' not in st.session_state:
@@ -117,4 +114,3 @@ def set_q4():
 
 def set_q5():
     st.session_state['query'] = QUERIES[4]
-
