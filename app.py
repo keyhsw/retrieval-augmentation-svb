@@ -55,16 +55,19 @@ st.markdown("<h5> Answer with GPT's Internal Knowledge </h5>", unsafe_allow_html
 placeholder_plain_gpt = st.empty()
 st.text(" ")
 st.text(" ")
-st.markdown(f"<h5> Answer with {st.session_state['query_type']} </h5>", unsafe_allow_html=True)
+if st.session_state.get("query_type", "Retrieval Augmented (Static news dataset)") == "Retrieval Augmented (Static news dataset)":
+    st.markdown("<h5> Answer with Retrieval Augmented GPT (Static news dataset) </h5>", unsafe_allow_html=True)
+else:
+    st.markdown("<h5> Answer with Retrieval Augmented GPT (Web Search) </h5>", unsafe_allow_html=True)
 placeholder_retrieval_augmented = st.empty()
 
 if st.session_state.get('query') and run_pressed:
-    input = st.session_state['query']
+    ip = st.session_state['query']
     with st.spinner('Loading pipelines... \n This may take a few mins and might also fail if OpenAI API server is down.'):
         p1 = get_plain_pipeline()
     with st.spinner('Fetching answers from GPT\'s internal knowledge... '
                     '\n This may take a few mins and might also fail if OpenAI API server is down.'):
-        answers = p1.run(input)
+        answers = p1.run(ip)
     placeholder_plain_gpt.markdown(answers['results'][0])
 
     if st.session_state.get("query_type", "Retrieval Augmented") == "Retrieval Augmented":
@@ -74,8 +77,13 @@ if st.session_state.get('query') and run_pressed:
             p2 = get_retrieval_augmented_pipeline()
         with st.spinner('Fetching relevant documents from documented stores and calculating answers... '
                         '\n This may take a few mins and might also fail if OpenAI API server is down.'):
-            answers_2 = p2.run(input)
+            answers_2 = p2.run(ip)
     else:
-        p3 = get_web_retrieval_augmented_pipeline()
-        answers_2 = p3.run(input)
+        with st.spinner(
+                'Loading Retrieval Augmented pipeline... \
+                n This may take a few mins and might also fail if OpenAI API server is down.'):
+            p3 = get_web_retrieval_augmented_pipeline()
+        with st.spinner('Fetching relevant documents from the Web and calculating answers... '
+                        '\n This may take a few mins and might also fail if OpenAI API server is down.'):
+            answers_2 = p3.run(ip)
     placeholder_retrieval_augmented.markdown(answers_2['results'][0])
