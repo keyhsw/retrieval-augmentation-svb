@@ -74,11 +74,11 @@ def right_sidebar():
 def left_sidebar():
     with st.sidebar:
         image = Image.open('logo/haystack-logo-colored.png')
-        st.markdown("Thank you for visiting this 🤗 space. \n\n"
-                    "This is an effort to showcase how to use Haystack for Retrieval-Augmented QA, "
-                    "with a local document store as well as a WebRetriever (coming soon!). \n\n"
-                    "For more information on how this was built, a repository will be published soon "
-                    "containing the instructions and code. We will update the link here.")
+        st.markdown("Thanks for coming to this :hugging_face: space. \n\n"
+                    "This is an effort towards showcasing how you can use Haystack for Retrieval Augmented QA, "
+                    "with local document store and a WebRetriever (coming soon!). \n\n"
+                    "More information on how this was built and instructions along "
+                    "with a repository will be published soon and updated here.")
 
         # st.markdown(
         #     "## How to use\n"
@@ -104,7 +104,7 @@ def left_sidebar():
             "This app was built with [Haystack](https://haystack.deepset.ai) using the"
             " [`PromptNode`](https://docs.haystack.deepset.ai/docs/prompt_node), "
             "[`Retriever`](https://docs.haystack.deepset.ai/docs/retriever#embedding-retrieval-recommended),"
-            "and [`FAISSDocumentStore`](https://docs.haystack.deepset.ai/reference/document-store-api#faissdocumentstore)\n\n"
+            "and [`FAISSDocumentStore`](https://docs.haystack.deepset.ai/reference/document-store-api#faissdocumentstore).\n\n"
             " You can find the source code in **Files and versions** tab."
         )
 
