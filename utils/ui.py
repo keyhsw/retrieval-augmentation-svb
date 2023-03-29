@@ -49,16 +49,16 @@ def main_column():
     #      QUERIES,
     #      key='q_drop_down', on_change=set_question)
 
-    st.markdown(f"<h5> {PLAIN_GPT_ANS} </h5>", unsafe_allow_html=True)
+    st.markdown(f"<h5>{PLAIN_GPT_ANS}</h5>", unsafe_allow_html=True)
     placeholder_plain_gpt = st.empty()
-    placeholder_plain_gpt.text_area(f" ", placeholder="The answer will appear here.",
+    placeholder_plain_gpt.text_area(f" ", placeholder="The answer will appear here.", disabled=True,
                                     key=PLAIN_GPT_ANS, height=1, label_visibility='collapsed')
     if st.session_state.get("query_type", BUTTON_LOCAL_RET_AUG) == BUTTON_LOCAL_RET_AUG:
-        st.markdown(f"<h5> {GPT_LOCAL_RET_AUG_ANS} </h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5>{GPT_LOCAL_RET_AUG_ANS}</h5>", unsafe_allow_html=True)
     else:
-        st.markdown(f"<h5>{GPT_WEB_RET_AUG_ANS} </h5>", unsafe_allow_html=True)
+        st.markdown(f"<h5>{GPT_WEB_RET_AUG_ANS}</h5>", unsafe_allow_html=True)
     placeholder_retrieval_augmented = st.empty()
-    placeholder_retrieval_augmented.text_area(f" ", placeholder="The answer will appear here.",
+    placeholder_retrieval_augmented.text_area(f" ", placeholder="The answer will appear here.", disabled=True,
                                               key=GPT_LOCAL_RET_AUG_ANS, height=1, label_visibility='collapsed')
 
     return run_pressed, placeholder_plain_gpt, placeholder_retrieval_augmented
@@ -66,11 +66,11 @@ def main_column():
 
 def right_sidebar():
     st.markdown("<h5> Example questions </h5>", unsafe_allow_html=True)
-    st.button(QUERIES[0], on_click=set_q1)
-    st.button(QUERIES[1], on_click=set_q2)
-    st.button(QUERIES[2], on_click=set_q3)
-    st.button(QUERIES[3], on_click=set_q4)
-    st.button(QUERIES[4], on_click=set_q5)
+    st.button(QUERIES[0], on_click=set_q1, use_container_width=True)
+    st.button(QUERIES[1], on_click=set_q2, use_container_width=True)
+    st.button(QUERIES[2], on_click=set_q3, use_container_width=True)
+    st.button(QUERIES[3], on_click=set_q4, use_container_width=True)
+    st.button(QUERIES[4], on_click=set_q5, use_container_width=True)
 
 
 def left_sidebar():
