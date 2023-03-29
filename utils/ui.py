@@ -53,7 +53,7 @@ def main_column():
     placeholder_plain_gpt = st.empty()
     st.text(" ")
     st.text(" ")
-    if st.session_state.get("query_type", "Retrieval Augmented (Static news dataset)") == "Retrieval Augmented (Static news dataset)":
+    if st.session_state.get("query_type", BUTTON_LOCAL_RET_AUG) == BUTTON_WEB_RET_AUG:
         st.markdown(f"<h5> {GPT_LOCAL_RET_AUG_ANS} </h5>", unsafe_allow_html=True)
     else:
         st.markdown(f"<h5>{GPT_WEB_RET_AUG_ANS} </h5>", unsafe_allow_html=True)
@@ -74,11 +74,11 @@ def right_sidebar():
 def left_sidebar():
     with st.sidebar:
         image = Image.open('logo/haystack-logo-colored.png')
-        st.markdown("Thanks for coming to this 🤗 Space.\n\n"
-                    "This is an effort towards showcasing how can you use Haystack for Retrieval Augmented QA, "
-                    "with local document store as well as WebRetriever (coming soon!) \n\n"
-                    "For more on how this was built, instructions along with a Repository "
-                    "will be published soon and updated here.")
+        st.markdown("Thank you for visiting this 🤗 space. \n\n"
+                    "This is an effort to showcase how to use Haystack for Retrieval-Augmented QA, "
+                    "with a local document store as well as a WebRetriever (coming soon!). \n\n"
+                    "For more information on how this was built, a repository will be published soon "
+                    "containing the instructions and code. We will update the link here.")
 
         # st.markdown(
         #     "## How to use\n"
@@ -102,7 +102,9 @@ def left_sidebar():
         st.markdown(
             "## How this works\n"
             "This app was built with [Haystack](https://haystack.deepset.ai) using the"
-            " [`PromptNode`](https://docs.haystack.deepset.ai/docs/prompt_node) and [`Retriever`](https://docs.haystack.deepset.ai/docs/retriever#embedding-retrieval-recommended).\n\n"
+            " [`PromptNode`](https://docs.haystack.deepset.ai/docs/prompt_node), "
+            "[`Retriever`](https://docs.haystack.deepset.ai/docs/retriever#embedding-retrieval-recommended),"
+            "and [`FAISSDocumentStore`](https://docs.haystack.deepset.ai/reference/document-store-api#faissdocumentstore)\n\n"
             " You can find the source code in **Files and versions** tab."
         )
 
