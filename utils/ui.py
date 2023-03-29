@@ -51,13 +51,15 @@ def main_column():
 
     st.markdown(f"<h5> {PLAIN_GPT_ANS} </h5>", unsafe_allow_html=True)
     placeholder_plain_gpt = st.empty()
-    st.text(" ")
-    st.text(" ")
-    if st.session_state.get("query_type", BUTTON_LOCAL_RET_AUG) == BUTTON_WEB_RET_AUG:
+    placeholder_plain_gpt.text_area(f" ", placeholder="The answer will appear here.",
+                                    key=PLAIN_GPT_ANS, height=1, label_visibility='collapsed')
+    if st.session_state.get("query_type", BUTTON_LOCAL_RET_AUG) == BUTTON_LOCAL_RET_AUG:
         st.markdown(f"<h5> {GPT_LOCAL_RET_AUG_ANS} </h5>", unsafe_allow_html=True)
     else:
         st.markdown(f"<h5>{GPT_WEB_RET_AUG_ANS} </h5>", unsafe_allow_html=True)
     placeholder_retrieval_augmented = st.empty()
+    placeholder_retrieval_augmented.text_area(f" ", placeholder="The answer will appear here.",
+                                              key=GPT_LOCAL_RET_AUG_ANS, height=1, label_visibility='collapsed')
 
     return run_pressed, placeholder_plain_gpt, placeholder_retrieval_augmented
 
