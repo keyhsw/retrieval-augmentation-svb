@@ -65,6 +65,8 @@ def main_column():
 
 
 def right_sidebar():
+    st.write("")
+    st.write("")
     st.markdown("<h5> Example questions </h5>", unsafe_allow_html=True)
     st.button(QUERIES[0], on_click=set_q1, use_container_width=True)
     st.button(QUERIES[1], on_click=set_q2, use_container_width=True)
