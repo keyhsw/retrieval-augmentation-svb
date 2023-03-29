@@ -10,7 +10,7 @@ st.set_page_config(
 )
 left_sidebar()
 
-st.markdown("<center> <h2> Reduce Hallucinations with Retrieval Augmentation </h2> </center>", unsafe_allow_html=True)
+st.markdown("<center> <h2> Reduce Hallucinations 😵‍💫 with Retrieval Augmentation </h2> </center>", unsafe_allow_html=True)
 
 st.markdown("<center>Ask a question about the collapse of the Silicon Valley Bank (SVB).</center>", unsafe_allow_html=True)
 
