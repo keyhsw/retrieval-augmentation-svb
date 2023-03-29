@@ -1,7 +1,8 @@
 import streamlit as st
 from PIL import Image
 
-from .constants import QUERIES, PLAIN_GPT_ANS, GPT_WEB_RET_AUG_ANS, GPT_LOCAL_RET_AUG_ANS
+from .constants import (QUERIES, PLAIN_GPT_ANS, GPT_WEB_RET_AUG_ANS, GPT_LOCAL_RET_AUG_ANS,
+                        BUTTON_LOCAL_RET_AUG, BUTTON_WEB_RET_AUG)
 
 
 def set_question():
@@ -27,6 +28,7 @@ def set_q4():
 def set_q5():
     st.session_state['query'] = QUERIES[4]
 
+
 def main_column():
     placeholder = st.empty()
     with placeholder:
@@ -40,7 +42,7 @@ def main_column():
             run_pressed = st.button("Run", key="run")
 
     st.write(" ")
-    st.radio("Answer Type:", ("Retrieval Augmented (Static news dataset)", "Retrieval Augmented with Web Search"), key="query_type")
+    st.radio("Answer Type:", (BUTTON_LOCAL_RET_AUG, BUTTON_WEB_RET_AUG), key="query_type")
 
     # st.sidebar.selectbox(
     #      "Example Questions:",
@@ -62,16 +64,10 @@ def main_column():
 
 def right_sidebar():
     st.markdown("<h5> Example questions </h5>", unsafe_allow_html=True)
-    # c1, c2, c3, c4, c5 = st.columns(5)
-    # with c1:
     st.button(QUERIES[0], on_click=set_q1)
-    # with c2:
     st.button(QUERIES[1], on_click=set_q2)
-    # with c3:
     st.button(QUERIES[2], on_click=set_q3)
-    # with c4:
     st.button(QUERIES[3], on_click=set_q4)
-    # with c5:
     st.button(QUERIES[4], on_click=set_q5)
 
 
