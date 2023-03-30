@@ -1,5 +1,5 @@
 ---
-title: Haystack Hackathon
+title: Retrieval Augmented Generative QA
 emoji: 👁
 colorFrom: blue
 colorTo: pink
